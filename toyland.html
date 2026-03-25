@@ -1,0 +1,2385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToyLand - Where Every Child's Dream Comes True</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #6C3CE1;
+            --accent: #FFD93D;
+            --background: #FFFFFF;
+            --text: #2C3E50;
+            --light-grey: #F8F9FA;
+            --border: #E1E8ED;
+            --success: #27AE60;
+            --danger: #E74C3C;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .navbar.scrolled .nav-content {
+            padding: 0.8rem 0;
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.2rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            transition: padding 0.3s ease;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 3rem 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            font-size: 1rem;
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--text);
+            transition: transform 0.2s ease;
+        }
+
+        .nav-icon:hover {
+            transform: scale(1.1);
+            color: var(--primary);
+        }
+
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--text);
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 12px rgba(0,0,0,0.1);
+            z-index: 1001;
+            transition: right 0.3s ease;
+            padding: 2rem;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--text);
+        }
+
+        .mobile-menu-links {
+            margin-top: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .mobile-menu-links a {
+            font-size: 1.2rem;
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* CATEGORY PILLS */
+        .category-pills {
+            background: white;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .category-pills::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .category-pills::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .pills-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .pill {
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            border: 2px solid var(--border);
+            background: white;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .pill:hover, .pill.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-top: 140px;
+        }
+
+        /* HERO BANNER */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .hero-left {
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        .trust-row {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hero-right {
+            position: relative;
+            height: 300px;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            font-size: 3rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .floating-emoji:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-emoji:nth-child(2) {
+            top: 20%;
+            right: 20%;
+            animation-delay: 0.5s;
+        }
+
+        .floating-emoji:nth-child(3) {
+            bottom: 30%;
+            left: 20%;
+            animation-delay: 1s;
+        }
+
+        .floating-emoji:nth-child(4) {
+            bottom: 20%;
+            right: 10%;
+            animation-delay: 1.5s;
+        }
+
+        .floating-emoji:nth-child(5) {
+            top: 50%;
+            left: 50%;
+            animation-delay: 2s;
+        }
+
+        .floating-emoji:nth-child(6) {
+            top: 70%;
+            right: 30%;
+            animation-delay: 2.5s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(5deg);
+            }
+        }
+
+        /* COUNTDOWN BANNER */
+        .countdown-banner {
+            background: var(--secondary);
+            color: white;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+
+        .countdown-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .countdown-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .countdown-timer {
+            display: flex;
+            gap: 1rem;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .countdown-timer.urgent {
+            color: var(--danger);
+        }
+
+        .btn-yellow {
+            background: var(--accent);
+            color: var(--text);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-yellow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        /* SECTION */
+        .section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text);
+        }
+
+        /* CATEGORY CARDS */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, var(--card-color-1), var(--card-color-2));
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+        }
+
+        .category-card-emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-card-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-card-count {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+        }
+
+        /* PRODUCTS */
+        .products-section {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .filter-sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 160px;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .clear-filters {
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-group:last-child {
+            border-bottom: none;
+        }
+
+        .filter-group-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .filter-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .filter-option label {
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .price-range {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .price-range input[type="range"] {
+            width: 100%;
+        }
+
+        .price-display {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .active-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-pill {
+            background: var(--light-grey);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-pill-remove {
+            cursor: pointer;
+            font-weight: 700;
+            color: var(--danger);
+        }
+
+        .products-main {
+            flex: 1;
+        }
+
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .result-count {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .product-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.15);
+        }
+
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--danger);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .product-badge.new {
+            background: var(--success);
+        }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .wishlist-btn.active {
+            color: var(--danger);
+        }
+
+        .product-info {
+            padding: 1.2rem;
+        }
+
+        .product-brand {
+            color: #95A5A6;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .product-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .product-age {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+            color: #7F8C8D;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .product-rating-value {
+            font-weight: 700;
+        }
+
+        .product-rating-count {
+            color: #95A5A6;
+        }
+
+        .product-pricing {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .product-original-price {
+            text-decoration: line-through;
+            color: #95A5A6;
+            font-size: 1rem;
+        }
+
+        .product-discount {
+            background: var(--danger);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .product-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .btn-cart {
+            background: var(--primary);
+            color: white;
+            padding: 0.8rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-cart:hover {
+            background: #E55A2B;
+            transform: translateY(-2px);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            padding: 0.8rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-whatsapp:hover {
+            background: #1EBE57;
+            transform: translateY(-2px);
+        }
+
+        /* WHY CHOOSE US */
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .why-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .why-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .why-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .why-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .why-desc {
+            color: #7F8C8D;
+            font-size: 0.95rem;
+        }
+
+        /* TESTIMONIALS */
+        .testimonials {
+            background: var(--light-grey);
+        }
+
+        .testimonial-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: none;
+            text-align: center;
+        }
+
+        .testimonial-card.active {
+            display: block;
+        }
+
+        .testimonial-stars {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .testimonial-role {
+            color: #7F8C8D;
+            font-size: 0.95rem;
+        }
+
+        .testimonial-dots {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .testimonial-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #BDC3C7;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-dot.active {
+            background: var(--primary);
+            transform: scale(1.3);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #2C3E50;
+            color: white;
+            padding: 3rem 2rem 1rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-tagline {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .footer-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .payment-icons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .payment-icon {
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            color: var(--text);
+            font-size: 0.85rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* CART SIDEBAR */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -450px;
+            width: 450px;
+            height: 100vh;
+            background: white;
+            box-shadow: -4px 0 12px rgba(0,0,0,0.2);
+            z-index: 1002;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-sidebar.active {
+            right: 0;
+        }
+
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .cart-close {
+            font-size: 2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--text);
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
+        }
+
+        .cart-item-brand {
+            color: #7F8C8D;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .qty-value {
+            font-weight: 700;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .cart-item-price {
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .cart-item-remove {
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #7F8C8D;
+        }
+
+        .cart-empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+
+        .cart-total-value {
+            color: var(--primary);
+        }
+
+        .cart-checkout-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cart-checkout-btn:hover {
+            background: #1EBE57;
+            transform: translateY(-2px);
+        }
+
+        /* FLOATING WHATSAPP */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+        }
+
+        /* MOBILE FILTER */
+        .mobile-filter-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            border: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 998;
+            cursor: pointer;
+        }
+
+        .filter-bottom-sheet {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            max-height: 80vh;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+            z-index: 1001;
+            transition: bottom 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .filter-bottom-sheet.active {
+            bottom: 0;
+        }
+
+        .filter-sheet-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+        }
+
+        .filter-sheet-content {
+            padding: 1.5rem;
+        }
+
+        .filter-sheet-footer {
+            padding: 1.5rem;
+            border-top: 2px solid var(--border);
+            position: sticky;
+            bottom: 0;
+            background: white;
+        }
+
+        .apply-filters-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #7F8C8D;
+        }
+
+        .empty-state-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state-subtext {
+            font-size: 1rem;
+        }
+
+        /* OVERLAY */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .filter-sidebar {
+                display: none;
+            }
+
+            .mobile-filter-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-content {
+                padding: 1rem;
+            }
+
+            .search-container {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-right {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .countdown-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .countdown-timer {
+                font-size: 1.5rem;
+            }
+
+            .section {
+                padding: 2rem 1rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                gap: 1rem;
+            }
+
+            .product-card {
+                font-size: 0.9rem;
+            }
+
+            .product-image-container {
+                height: 160px;
+            }
+
+            .product-name {
+                font-size: 0.95rem;
+            }
+
+            .product-price {
+                font-size: 1.2rem;
+            }
+
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .main-content {
+                margin-top: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- OVERLAY -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-content">
+            <a href="#" class="logo">
+                <span>🧸</span>
+                <span>ToyLand</span>
+            </a>
+
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search for toys, brands, categories...">
+                <span class="search-icon">🔍</span>
+            </div>
+
+            <div class="nav-actions">
+                <div class="nav-icon" id="wishlistIcon">
+                    ❤️
+                    <span class="badge" id="wishlistBadge">0</span>
+                </div>
+                <div class="nav-icon" id="cartIcon">
+                    🛒
+                    <span class="badge" id="cartBadge">0</span>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CATEGORY PILLS -->
+        <div class="category-pills">
+            <div class="pills-container">
+                <button class="pill active" data-category="all">All</button>
+                <button class="pill" data-category="Action Figures">Action Figures</button>
+                <button class="pill" data-category="Building Blocks">Building Blocks</button>
+                <button class="pill" data-category="Board Games">Board Games</button>
+                <button class="pill" data-category="Remote Control">Remote Control</button>
+                <button class="pill" data-category="Educational">Educational</button>
+                <button class="pill" data-category="Soft Toys">Soft Toys</button>
+                <button class="pill" data-category="Outdoor">Outdoor & Sports</button>
+                <button class="pill" data-category="Arts">Arts & Crafts</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MOBILE MENU -->
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose">×</button>
+        <div class="mobile-menu-links">
+            <a href="#categories">Categories</a>
+            <a href="#products">Products</a>
+            <a href="#why-us">Why Choose Us</a>
+            <a href="#testimonials">Testimonials</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <!-- HERO BANNER -->
+        <section class="hero">
+            <div class="hero-content">
+                <div class="hero-left">
+                    <div class="hero-badge">🎉 Mega Sale — Up to 50% OFF</div>
+                    <h1 class="hero-title">Discover the Magic of Play</h1>
+                    <p class="hero-subtitle">India's most loved toy shop. 500+ toys for every age.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">Shop Now</button>
+                        <button class="btn btn-outline" onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">View Catalogue</button>
+                    </div>
+                    <div class="trust-row">
+                        <div class="trust-item">🚚 Free Delivery</div>
+                        <div class="trust-item">✅ Safe Toys</div>
+                        <div class="trust-item">🔄 Easy Returns</div>
+                        <div class="trust-item">💰 COD</div>
+                    </div>
+                </div>
+                <div class="hero-right">
+                    <div class="floating-emoji">🧸</div>
+                    <div class="floating-emoji">🚀</div>
+                    <div class="floating-emoji">🎮</div>
+                    <div class="floating-emoji">🎯</div>
+                    <div class="floating-emoji">🏆</div>
+                    <div class="floating-emoji">🎨</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- COUNTDOWN BANNER -->
+        <section class="countdown-banner">
+            <div class="countdown-content">
+                <div class="countdown-title">⚡ FLASH SALE ENDS IN:</div>
+                <div class="countdown-timer" id="countdownTimer">
+                    <span id="hours">23</span>h
+                    <span id="minutes">59</span>m
+                    <span id="seconds">59</span>s
+                </div>
+                <button class="btn-yellow" onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">Shop Sale</button>
+            </div>
+        </section>
+
+        <!-- CATEGORY CARDS -->
+        <section class="section" id="categories">
+            <h2 class="section-title">Shop by Category</h2>
+            <div class="category-grid">
+                <div class="category-card" style="--card-color-1: #FF6B35; --card-color-2: #E74C3C;" data-category="Action Figures">
+                    <div class="category-card-emoji">🦸</div>
+                    <div class="category-card-name">Action Figures</div>
+                    <div class="category-card-count">4 products</div>
+                </div>
+                <div class="category-card" style="--card-color-1: #3498DB; --card-color-2: #6C3CE1;" data-category="Building Blocks">
+                    <div class="category-card-emoji">🧱</div>
+                    <div class="category-card-name">Building Blocks</div>
+                    <div class="category-card-count">3 products</div>
+                </div>
+                <div class="category-card" style="--card-color-1: #27AE60; --card-color-2: #16A085;" data-category="Board Games">
+                    <div class="category-card-emoji">🎲</div>
+                    <div class="category-card-name">Board Games</div>
+                    <div class="category-card-count">3 products</div>
+                </div>
+                <div class="category-card" style="--card-color-1: #E74C3C; --card-color-2: #E91E8C;" data-category="Remote Control">
+                    <div class="category-card-emoji">🚗</div>
+                    <div class="category-card-name">Remote Control</div>
+                    <div class="category-card-count">3 products</div>
+                </div>
+                <div class="category-card" style="--card-color-1: #FFD93D; --card-color-2: #F39C12;" data-category="Educational">
+                    <div class="category-card-emoji">📚</div>
+                    <div class="category-card-name">Educational</div>
+                    <div class="category-card-count">3 products</div>
+                </div>
+                <div class="category-card" style="--card-color-1: #E91E8C; --card-color-2: #6C3CE1;" data-category="Soft Toys">
+                    <div class="category-card-emoji">🧸</div>
+                    <div class="category-card-name">Soft Toys</div>
+                    <div class="category-card-count">2 products</div>
+                </div>
+                <div class="category-card" style="--card-color-1: #27AE60; --card-color-2: #3498DB;" data-category="Outdoor">
+                    <div class="category-card-emoji">⚽</div>
+                    <div class="category-card-name">Outdoor & Sports</div>
+                    <div class="category-card-count">3 products</div>
+                </div>
+                <div class="category-card" style="--card-color-1: #6C3CE1; --card-color-2: #E91E8C;" data-category="Arts">
+                    <div class="category-card-emoji">🎨</div>
+                    <div class="category-card-name">Arts & Crafts</div>
+                    <div class="category-card-count">3 products</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTS -->
+        <section class="section" id="products">
+            <h2 class="section-title">Our Collection</h2>
+
+            <div class="active-filters" id="activeFilters"></div>
+
+            <div class="products-section">
+                <!-- FILTER SIDEBAR -->
+                <aside class="filter-sidebar" id="filterSidebar">
+                    <div class="filter-header">
+                        <div class="filter-title">Filters</div>
+                        <div class="clear-filters" onclick="clearAllFilters()">Clear All</div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-group-title">Price Range</div>
+                        <div class="price-range">
+                            <input type="range" min="0" max="5000" value="5000" step="100" id="priceRange">
+                            <div class="price-display">Up to ₹<span id="priceValue">5000</span></div>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-group-title">Age Range</div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="age1" value="0-3">
+                            <label for="age1">0-3 years</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="age2" value="3-6">
+                            <label for="age2">3-6 years</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="age3" value="6-10">
+                            <label for="age3">6-10 years</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="age4" value="10-14">
+                            <label for="age4">10-14 years</label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <div class="filter-group-title">Brand</div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="brand1" value="Hasbro">
+                            <label for="brand1">Hasbro</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="brand2" value="Mattel">
+                            <label for="brand2">Mattel</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="brand3" value="LEGO">
+                            <label for="brand3">LEGO</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="brand4" value="Melissa & Doug">
+                            <label for="brand4">Melissa & Doug</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="brand5" value="Funskool">
+                            <label for="brand5">Funskool</label>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- PRODUCTS MAIN -->
+                <div class="products-main">
+                    <div class="products-header">
+                        <div class="result-count" id="resultCount">Showing 24 products</div>
+                    </div>
+
+                    <div class="product-grid" id="productGrid"></div>
+
+                    <div class="empty-state" id="emptyState" style="display: none;">
+                        <div class="empty-state-icon">😕</div>
+                        <div class="empty-state-text">No products found</div>
+                        <div class="empty-state-subtext">Try a different search or filter</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY CHOOSE US -->
+        <section class="section" id="why-us">
+            <h2 class="section-title">Why Choose Us</h2>
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="why-icon">🚚</div>
+                    <div class="why-title">Free Delivery</div>
+                    <div class="why-desc">Free shipping on orders above ₹499</div>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">✅</div>
+                    <div class="why-title">100% Safe Toys</div>
+                    <div class="why-desc">BIS certified and quality tested</div>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">🔄</div>
+                    <div class="why-title">Easy Returns</div>
+                    <div class="why-desc">Hassle-free 7-day return policy</div>
+                </div>
+                <div class="why-card">
+                    <div class="why-icon">💰</div>
+                    <div class="why-title">Cash on Delivery</div>
+                    <div class="why-desc">Pay when you receive your order</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section class="section testimonials" id="testimonials">
+            <h2 class="section-title">What Parents Say</h2>
+            <div class="testimonial-container">
+                <div class="testimonial-card active">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <div class="testimonial-text">
+                        "My son absolutely loves the LEGO set we ordered! Delivery was super fast and packaging was perfect."
+                    </div>
+                    <div class="testimonial-author">Priya Sharma, Delhi</div>
+                    <div class="testimonial-role">Mom of 7-year-old</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <div class="testimonial-text">
+                        "Amazing variety and genuine products. The RC car I ordered for my daughter works perfectly!"
+                    </div>
+                    <div class="testimonial-author">Rahul Verma, Mumbai</div>
+                    <div class="testimonial-role">Dad of 9-year-old</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                    <div class="testimonial-text">
+                        "Best toy shop online! Ordered 3 board games, all arrived next day. Will order again!"
+                    </div>
+                    <div class="testimonial-author">Anjali Gupta, Bangalore</div>
+                    <div class="testimonial-role">Mom of 6 and 10-year-old</div>
+                </div>
+                <div class="testimonial-dots">
+                    <div class="testimonial-dot active"></div>
+                    <div class="testimonial-dot"></div>
+                    <div class="testimonial-dot"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="footer" id="contact">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <div class="footer-logo">🧸 ToyLand</div>
+                    <div class="footer-tagline">"Where Every Child's Dream Comes True"</div>
+                    <div class="payment-icons">
+                        <div class="payment-icon">UPI</div>
+                        <div class="payment-icon">Paytm</div>
+                        <div class="payment-icon">GPay</div>
+                        <div class="payment-icon">PhonePe</div>
+                        <div class="payment-icon">COD</div>
+                        <div class="payment-icon">Visa</div>
+                        <div class="payment-icon">Mastercard</div>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <div class="footer-links">
+                        <a href="#categories">Categories</a>
+                        <a href="#products">Products</a>
+                        <a href="#why-us">Why Choose Us</a>
+                        <a href="#testimonials">Testimonials</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Categories</h3>
+                    <div class="footer-links">
+                        <a href="#">Action Figures</a>
+                        <a href="#">Building Blocks</a>
+                        <a href="#">Board Games</a>
+                        <a href="#">Remote Control</a>
+                        <a href="#">Educational Toys</a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <div class="footer-contact">
+                        <div class="footer-contact-item">
+                            📞 +91-9818231025
+                        </div>
+                        <div class="footer-contact-item">
+                            💬 WhatsApp
+                        </div>
+                        <div class="footer-contact-item">
+                            📧 hello@toyland.in
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © 2025 ToyLand. Made with ❤️ in India
+            </div>
+        </footer>
+    </main>
+
+    <!-- WISHLIST SIDEBAR -->
+    <div class="cart-sidebar" id="wishlistSidebar">
+        <div class="cart-header">
+            <div class="cart-title">&#10084;&#65039; Wishlist</div>
+            <button class="cart-close" onclick="document.getElementById('wishlistSidebar').classList.remove('active');document.getElementById('overlay').classList.remove('active');">&times;</button>
+        </div>
+        <div class="cart-items" id="wishlistItems"></div>
+    </div>
+
+    <!-- CART SIDEBAR -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <div class="cart-title">Your Cart</div>
+            <button class="cart-close" id="cartClose">×</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty" id="cartEmpty">
+                <div class="cart-empty-icon">🛒</div>
+                <div>Your cart is empty</div>
+            </div>
+        </div>
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span class="cart-total-value" id="cartTotal">₹0</span>
+            </div>
+            <button class="cart-checkout-btn" onclick="checkoutCart()">💬 Checkout on WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- MOBILE FILTER BUTTON -->
+    <button class="mobile-filter-btn" id="mobileFilterBtn">🔍 Filter & Sort</button>
+
+    <!-- FILTER BOTTOM SHEET -->
+    <div class="filter-bottom-sheet" id="filterBottomSheet">
+        <div class="filter-sheet-header">
+            <div class="filter-title">Filters</div>
+            <button class="cart-close" onclick="closeFilterSheet()">×</button>
+        </div>
+        <div class="filter-sheet-content">
+            <div class="filter-group">
+                <div class="filter-group-title">Price Range</div>
+                <div class="price-range">
+                    <input type="range" min="0" max="5000" value="5000" step="100" id="priceRangeMobile">
+                    <div class="price-display">Up to ₹<span id="priceValueMobile">5000</span></div>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">Age Range</div>
+                <div class="filter-option">
+                    <input type="checkbox" id="ageM1" value="0-3">
+                    <label for="ageM1">0-3 years</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="ageM2" value="3-6">
+                    <label for="ageM2">3-6 years</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="ageM3" value="6-10">
+                    <label for="ageM3">6-10 years</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="ageM4" value="10-14">
+                    <label for="ageM4">10-14 years</label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-group-title">Brand</div>
+                <div class="filter-option">
+                    <input type="checkbox" id="brandM1" value="Hasbro">
+                    <label for="brandM1">Hasbro</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="brandM2" value="Mattel">
+                    <label for="brandM2">Mattel</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="brandM3" value="LEGO">
+                    <label for="brandM3">LEGO</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="brandM4" value="Melissa & Doug">
+                    <label for="brandM4">Melissa & Doug</label>
+                </div>
+                <div class="filter-option">
+                    <input type="checkbox" id="brandM5" value="Funskool">
+                    <label for="brandM5">Funskool</label>
+                </div>
+            </div>
+        </div>
+        <div class="filter-sheet-footer">
+            <button class="apply-filters-btn" onclick="applyFilters()">Apply Filters</button>
+        </div>
+    </div>
+
+    <!-- WHATSAPP FLOAT -->
+    <div class="whatsapp-float" onclick="openWhatsApp()">💬</div>
+
+    <script>
+        // PRODUCT DATA
+        const products = [
+            { id: 1, name: 'Spider-Man Action Figure', brand: 'Hasbro', category: 'Action Figures', age: '4-12', price: 799, original: 1199, rating: 4.5, reviews: 128, color: 'FF6B35', badge: 'SALE' },
+            { id: 2, name: 'Hot Wheels 20 Car Pack', brand: 'Mattel', category: 'Action Figures', age: '3-10', price: 899, original: 1299, rating: 4.7, reviews: 256, color: 'FF6B35', badge: 'SALE' },
+            { id: 3, name: 'Avengers 6-Figure Set', brand: 'Marvel', category: 'Action Figures', age: '5-14', price: 1499, original: 2199, rating: 4.6, reviews: 189, color: 'FF6B35', badge: 'SALE' },
+            { id: 4, name: 'Dinosaur Figure Set (12pcs)', brand: 'Safari', category: 'Action Figures', age: '3-10', price: 649, original: 899, rating: 4.4, reviews: 94, color: 'FF6B35', badge: 'SALE' },
+            { id: 5, name: 'LEGO Classic Creative Set', brand: 'LEGO', category: 'Building Blocks', age: '4-12', price: 2499, original: 3299, rating: 4.9, reviews: 412, color: '6C3CE1', badge: 'NEW' },
+            { id: 6, name: 'Magnetic Tiles 60pcs', brand: 'Magformers', category: 'Building Blocks', age: '3-10', price: 1799, original: 2499, rating: 4.8, reviews: 203, color: '6C3CE1', badge: 'SALE' },
+            { id: 7, name: 'Wooden Block Tower Game', brand: 'Funskool', category: 'Building Blocks', age: '3-8', price: 449, original: 599, rating: 4.3, reviews: 87, color: '6C3CE1', badge: 'SALE' },
+            { id: 8, name: 'UNO Card Game', brand: 'Mattel', category: 'Board Games', age: '7+', price: 299, original: 399, rating: 4.8, reviews: 567, color: '27AE60', badge: 'SALE' },
+            { id: 9, name: 'Chess & Ludo Combo', brand: 'Toy Kraft', category: 'Board Games', age: '6+', price: 449, original: 649, rating: 4.5, reviews: 145, color: '27AE60', badge: 'SALE' },
+            { id: 10, name: 'Scrabble Junior', brand: 'Hasbro', category: 'Board Games', age: '5-10', price: 799, original: 1099, rating: 4.6, reviews: 234, color: '27AE60', badge: 'NEW' },
+            { id: 11, name: 'RC Monster Truck', brand: 'Maisto', category: 'Remote Control', age: '6-14', price: 1799, original: 2499, rating: 4.7, reviews: 178, color: 'E74C3C', badge: 'SALE' },
+            { id: 12, name: 'RC Helicopter 4CH', brand: 'Syma', category: 'Remote Control', age: '8+', price: 1299, original: 1899, rating: 4.4, reviews: 112, color: 'E74C3C', badge: 'SALE' },
+            { id: 13, name: 'RC Racing Car 1:18', brand: 'HSP', category: 'Remote Control', age: '6-14', price: 999, original: 1499, rating: 4.5, reviews: 156, color: 'E74C3C', badge: 'SALE' },
+            { id: 14, name: 'Wooden Alphabet Puzzle', brand: 'Melissa & Doug', category: 'Educational', age: '2-5', price: 649, original: 899, rating: 4.8, reviews: 289, color: 'F39C12', badge: 'NEW' },
+            { id: 15, name: 'Kids Microscope Set', brand: 'GeoSafari', category: 'Educational', age: '8-14', price: 1099, original: 1599, rating: 4.6, reviews: 134, color: 'F39C12', badge: 'SALE' },
+            { id: 16, name: 'Math Learning Abacus', brand: 'Kumon', category: 'Educational', age: '3-7', price: 349, original: 499, rating: 4.7, reviews: 201, color: 'F39C12', badge: 'SALE' },
+            { id: 17, name: 'Giant Teddy Bear 3ft', brand: 'Huggable', category: 'Soft Toys', age: 'All ages', price: 1299, original: 1799, rating: 4.9, reviews: 456, color: 'E91E8C', badge: 'NEW' },
+            { id: 18, name: 'Barbie Dreamhouse Set', brand: 'Mattel', category: 'Soft Toys', age: '3-12', price: 4999, original: 6499, rating: 4.8, reviews: 312, color: 'E91E8C', badge: 'SALE' },
+            { id: 19, name: 'Nerf Elite Blaster', brand: 'Nerf', category: 'Outdoor', age: '8+', price: 1299, original: 1799, rating: 4.7, reviews: 267, color: '2ECC71', badge: 'SALE' },
+            { id: 20, name: 'Kids Badminton Set', brand: 'Cosco', category: 'Outdoor', age: '5-14', price: 499, original: 699, rating: 4.4, reviews: 98, color: '2ECC71', badge: 'SALE' },
+            { id: 21, name: 'Bubble Gun Electric', brand: 'Fun Zone', category: 'Outdoor', age: '3-10', price: 349, original: 499, rating: 4.6, reviews: 178, color: '2ECC71', badge: 'NEW' },
+            { id: 22, name: 'Play-Doh Mega Set 36 Colors', brand: 'Hasbro', category: 'Arts', age: '3-10', price: 799, original: 999, rating: 4.8, reviews: 345, color: '9B59B6', badge: 'SALE' },
+            { id: 23, name: 'Crayola 120 Crayon Set', brand: 'Crayola', category: 'Arts', age: '3+', price: 599, original: 849, rating: 4.7, reviews: 234, color: '9B59B6', badge: 'SALE' },
+            { id: 24, name: 'Kids Painting Easel Set', brand: 'Melissa & Doug', category: 'Arts', age: '3-10', price: 1499, original: 1999, rating: 4.6, reviews: 167, color: '9B59B6', badge: 'NEW' }
+        ];
+
+        // STATE
+        let cart = [];
+        let wishlist = [];
+        let filteredProducts = [...products];
+        let currentCategory = 'all';
+        let searchQuery = '';
+
+        // INIT
+        function init() {
+            renderProducts();
+            setupEventListeners();
+            startCountdown();
+            startTestimonialCarousel();
+            setupScrollAnimations();
+            setupStickyNavbar();
+        }
+
+        // RENDER PRODUCTS
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            const resultCount = document.getElementById('resultCount');
+            const emptyState = document.getElementById('emptyState');
+
+            if (filteredProducts.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                resultCount.textContent = 'No products found';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            emptyState.style.display = 'none';
+            resultCount.textContent = `Showing ${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''}`;
+
+            grid.innerHTML = filteredProducts.map((product, index) => {
+                const discount = Math.round(((product.original - product.price) / product.original) * 100);
+                const isWishlisted = wishlist.includes(product.id);
+
+                return `
+                    <div class="product-card" style="transition-delay: ${index * 0.05}s">
+                        <div class="product-image-container">
+                            <img src="https://placehold.co/280x280/${product.color}/white?text=${encodeURIComponent(product.name)}" alt="${product.name}" class="product-image">
+                            <div class="product-badge ${product.badge === 'NEW' ? 'new' : ''}">${product.badge}</div>
+                            <button class="wishlist-btn ${isWishlisted ? 'active' : ''}" onclick="toggleWishlist(${product.id})">
+                                ${isWishlisted ? '❤️' : '🤍'}
+                            </button>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-brand">${product.brand}</div>
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-age">👶 ${product.age}</div>
+                            <div class="product-rating">
+                                ⭐ <span class="product-rating-value">${product.rating}</span>
+                                <span class="product-rating-count">(${product.reviews} reviews)</span>
+                            </div>
+                            <div class="product-pricing">
+                                <div class="product-price">₹${product.price}</div>
+                                <div class="product-original-price">₹${product.original}</div>
+                                <div class="product-discount">${discount}% OFF</div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn-cart" onclick="addToCart(${product.id})">🛒 Add to Cart</button>
+                                <button class="btn-whatsapp" onclick="orderOnWhatsApp(${product.id})">💬 Order on WhatsApp</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            setTimeout(() => {
+                document.querySelectorAll('.product-card').forEach(card => {
+                    card.classList.add('visible');
+                });
+            }, 100);
+        }
+
+        // FILTER PRODUCTS
+        function filterProducts() {
+            filteredProducts = products.filter(product => {
+                const categoryMatch = currentCategory === 'all' || product.category === currentCategory;
+                const searchMatch = searchQuery === '' ||
+                    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    product.brand.toLowerCase().includes(searchQuery.toLowerCase());
+
+                const priceRange = parseInt(document.getElementById('priceRange').value);
+                const priceMatch = product.price <= priceRange;
+
+                const ageCheckboxes = Array.from(document.querySelectorAll('#age1:checked,#age2:checked,#age3:checked,#age4:checked')).map(cb => cb.value);
+                const ageMatch = ageCheckboxes.length === 0 || ageCheckboxes.some(range => {
+                    const [min, max] = range.split('-').map(Number);
+                    const age = product.age;
+                    if (age === 'All ages') return true;
+                    if (age.includes('+')) {
+                        const pMin = parseInt(age);
+                        return pMin <= max;
+                    }
+                    if (age.includes('-')) {
+                        const [pMin, pMax] = age.split('-').map(Number);
+                        return pMin <= max && pMax >= min;
+                    }
+                    return false;
+                });
+
+
+                const brandCheckboxes = Array.from(document.querySelectorAll('[id^="brand"]:checked')).map(cb => cb.value);
+                const brandMatch = brandCheckboxes.length === 0 || brandCheckboxes.includes(product.brand);
+
+                return categoryMatch && searchMatch && priceMatch && ageMatch && brandMatch;
+            });
+
+            renderProducts();
+        }
+
+        // CATEGORY FILTER
+        function setCategory(category) {
+            currentCategory = category;
+
+            document.querySelectorAll('.pill').forEach(pill => {
+                pill.classList.remove('active');
+            });
+
+            event.target.classList.add('active');
+
+            filterProducts();
+        }
+
+        // SEARCH
+        function handleSearch(e) {
+            searchQuery = e.target.value;
+            filterProducts();
+        }
+
+        // CART
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.qty++;
+            } else {
+                cart.push({ ...product, qty: 1 });
+            }
+
+            updateCart();
+            showCartSidebar();
+        }
+
+        function updateCart() {
+            const cartBadge = document.getElementById('cartBadge');
+            const cartItems = document.getElementById('cartItems');
+            const cartFooter = document.getElementById('cartFooter');
+            const cartTotal = document.getElementById('cartTotal');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            cartBadge.textContent = totalItems;
+
+            if (cart.length === 0) {
+                cartFooter.style.display = 'none';
+                cartItems.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">🛒</div><div>Your cart is empty</div></div>';
+                return;
+            }
+
+            cartFooter.style.display = 'block';
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            cartTotal.textContent = `₹${total}`;
+
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="https://placehold.co/80x80/${item.color}/white?text=${encodeURIComponent(item.name.split(' ')[0])}" alt="${item.name}" class="cart-item-image">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-brand">${item.brand}</div>
+                        <div class="cart-item-controls">
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="updateQty(${item.id}, -1)">−</button>
+                                <span class="qty-value">${item.qty}</span>
+                                <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+                            </div>
+                            <div class="cart-item-price">₹${item.price * item.qty}</div>
+                            <div class="cart-item-remove" onclick="removeFromCart(${item.id})">🗑️</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateQty(productId, change) {
+            const item = cart.find(i => i.id === productId);
+            if (item) {
+                item.qty += change;
+                if (item.qty <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    updateCart();
+                }
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+        }
+
+        function showCartSidebar() {
+            document.getElementById('cartSidebar').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+
+        function hideCartSidebar() {
+            document.getElementById('cartSidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+
+        // WISHLIST
+        function toggleWishlist(productId) {
+            if (wishlist.includes(productId)) {
+                wishlist = wishlist.filter(id => id !== productId);
+            } else {
+                wishlist.push(productId);
+            }
+
+            document.getElementById('wishlistBadge').textContent = wishlist.length;
+            renderProducts();
+        }
+
+        // WHATSAPP
+        function orderOnWhatsApp(productId) {
+            const product = products.find(p => p.id === productId);
+            const message = `Hi! I want to order:%0A%0AProduct: ${product.name}%0ABrand: ${product.brand}%0APrice: ₹${product.price}%0A%0APlease confirm availability and delivery time.`;
+            window.open(`https://wa.me/919818231025?text=${message}`, '_blank');
+        }
+
+        function checkoutCart() {
+            let message = 'Hi! Here is my order:%0A%0A';
+            cart.forEach((item, index) => {
+                message += `${index + 1}. ${item.name} x${item.qty} = ₹${item.price * item.qty}%0A`;
+            });
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            message += `%0ATotal: ₹${total}%0A%0APlease confirm my order. Thank you!`;
+            window.open(`https://wa.me/919818231025?text=${message}`, '_blank');
+        }
+
+        function showWishlistSidebar() {
+            const container = document.getElementById('wishlistItems');
+            if (wishlist.length === 0) {
+                container.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">&#10084;&#65039;</div><div>Your wishlist is empty</div></div>';
+            } else {
+                container.innerHTML = wishlist.map(id => {
+                    const p = products.find(x => x.id === id);
+                    return `
+                        <div class="cart-item">
+                            <img src="https://placehold.co/80x80/${p.color}/white?text=${encodeURIComponent(p.name.split(' ')[0])}" alt="${p.name}" class="cart-item-image">
+                            <div class="cart-item-info">
+                                <div class="cart-item-name">${p.name}</div>
+                                <div class="cart-item-brand">${p.brand}</div>
+                                <div class="cart-item-controls">
+                                    <div class="cart-item-price">&#8377;${p.price}</div>
+                                    <button class="qty-btn" onclick="addToCart(${p.id})" style="width:auto;padding:0 10px;border-radius:8px;">Add to Cart</button>
+                                    <div class="cart-item-remove" onclick="toggleWishlist(${p.id});showWishlistSidebar();">&#128465;&#65039;</div>
+                                </div>
+                            </div>
+                        </div>`;
+                }).join('');
+            }
+            document.getElementById('wishlistSidebar').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+
+        function openWhatsApp() {
+            const message = 'Hi! I have a question about your toys.';
+            window.open(`https://wa.me/919818231025?text=${message}`, '_blank');
+        }
+
+        // COUNTDOWN TIMER
+        function startCountdown() {
+            const storedEndTime = localStorage.getItem('saleEndTime');
+            let endTime;
+
+            if (storedEndTime) {
+                endTime = parseInt(storedEndTime);
+            } else {
+                endTime = Date.now() + (24 * 60 * 60 * 1000) - (60 * 1000);
+                localStorage.setItem('saleEndTime', endTime.toString());
+            }
+
+            function updateTimer() {
+                const now = Date.now();
+                const diff = endTime - now;
+
+                if (diff <= 0) {
+                    endTime = Date.now() + (24 * 60 * 60 * 1000);
+                    localStorage.setItem('saleEndTime', endTime.toString());
+                }
+
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+                const timer = document.getElementById('countdownTimer');
+                if (hours < 1) {
+                    timer.classList.add('urgent');
+                } else {
+                    timer.classList.remove('urgent');
+                }
+            }
+
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+
+        // TESTIMONIALS
+        function startTestimonialCarousel() {
+            let currentIndex = 0;
+            const cards = document.querySelectorAll('.testimonial-card');
+            const dots = document.querySelectorAll('.testimonial-dot');
+
+            function showTestimonial(index) {
+                cards.forEach(card => card.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+                cards[index].classList.add('active');
+                dots[index].classList.add('active');
+            }
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    currentIndex = index;
+                    showTestimonial(currentIndex);
+                });
+            });
+
+            setInterval(() => {
+                currentIndex = (currentIndex + 1) % cards.length;
+                showTestimonial(currentIndex);
+            }, 4000);
+        }
+
+        // SCROLL ANIMATIONS
+        function setupScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.product-card').forEach(card => {
+                observer.observe(card);
+            });
+        }
+
+        // STICKY NAVBAR
+        function setupStickyNavbar() {
+            const navbar = document.getElementById('navbar');
+            let lastScroll = 0;
+
+            window.addEventListener('scroll', () => {
+                const currentScroll = window.pageYOffset;
+
+                if (currentScroll > 80) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+
+                lastScroll = currentScroll;
+            });
+        }
+
+        // FILTERS
+        function clearAllFilters() {
+            document.getElementById('priceRange').value = 5000;
+            document.getElementById('priceValue').textContent = '5000';
+            document.querySelectorAll('[id^="age"]:checked').forEach(cb => cb.checked = false);
+            document.querySelectorAll('[id^="brand"]:checked').forEach(cb => cb.checked = false);
+            filterProducts();
+        }
+
+        function applyFilters() {
+            closeFilterSheet();
+            filterProducts();
+        }
+
+        function closeFilterSheet() {
+            document.getElementById('filterBottomSheet').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+
+        // EVENT LISTENERS
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+document.getElementById('searchInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && searchQuery.trim() !== '') {
+        document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+    }
+});
+            document.getElementById('cartIcon').addEventListener('click', showCartSidebar);
+            document.getElementById('wishlistIcon').addEventListener('click', showWishlistSidebar);
+            document.getElementById('cartClose').addEventListener('click', hideCartSidebar);
+            document.getElementById('overlay').addEventListener('click', () => {
+                hideCartSidebar();
+                closeFilterSheet();
+                document.getElementById('mobileMenu').classList.remove('active');
+            });
+
+            document.querySelectorAll('.pill').forEach(pill => {
+                pill.addEventListener('click', (e) => {
+                    const category = pill.dataset.category;
+                    currentCategory = category === 'all' ? 'all' : category;
+
+                    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                    pill.classList.add('active');
+
+                    filterProducts();
+                    setTimeout(() => {
+    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+}, 50);
+                });
+            });
+
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const category = card.dataset.category;
+                    currentCategory = category;
+
+                    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                    const matchingPill = document.querySelector(`.pill[data-category="${category}"]`);
+                    if (matchingPill) matchingPill.classList.add('active');
+
+                    filterProducts();
+                    document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+                });
+            });
+
+            document.getElementById('priceRange').addEventListener('input', (e) => {
+                document.getElementById('priceValue').textContent = e.target.value;
+                filterProducts();
+            });
+
+            document.getElementById('priceRangeMobile').addEventListener('input', (e) => {
+                document.getElementById('priceValueMobile').textContent = e.target.value;
+                document.getElementById('priceRange').value = e.target.value;
+            });
+
+            document.querySelectorAll('[id^="age"]').forEach(checkbox => {
+                checkbox.addEventListener('change', filterProducts);
+            });
+
+            document.querySelectorAll('[id^="brand"]').forEach(checkbox => {
+                checkbox.addEventListener('change', filterProducts);
+            });
+
+            document.getElementById('mobileFilterBtn').addEventListener('click', () => {
+                document.getElementById('filterBottomSheet').classList.add('active');
+                document.getElementById('overlay').classList.add('active');
+            });
+ 
+            document.getElementById('hamburger').addEventListener('click', () => {
+                document.getElementById('mobileMenu').classList.add('active');
+                document.getElementById('overlay').classList.add('active');
+            });
+
+            document.getElementById('mobileMenuClose').addEventListener('click', () => {
+                document.getElementById('mobileMenu').classList.remove('active');
+                document.getElementById('overlay').classList.remove('active');
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
