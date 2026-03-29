@@ -402,17 +402,17 @@ function toggleWishlist(productId) {
 function orderOnWhatsApp(productId) {
   const product = allProducts.find(p => p.id === productId);
   if (!product) return;
-  const message = `Hi! I want to order:%0A%0AProduct: ${product.name}%0ABrand: ${product.brand}%0APrice: ₹${product.price}%0A%0APlease confirm availability and delivery time.`;
+  const message = `Hi! I want to order:\n\nProduct: ${product.name}\nBrand: ${product.brand}\nPrice: ₹${product.price}\n\nPlease confirm availability and delivery time.`;
   window.open(`https://wa.me/919818231025?text=${encodeURIComponent(message)}`, '_blank');
 }
 
 function checkoutCart() {
-  let message = 'Hi! Here is my order:%0A%0A';
+  let message = 'Hi! Here is my order:\n\n';
   cart.forEach((item, index) => {
-    message += `${index + 1}. ${item.name} x${item.qty} = ₹${item.price * item.qty}%0A`;
+    message += `${index + 1}. ${item.name} x${item.qty} = ₹${item.price * item.qty}\n`;
   });
   const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-  message += `%0ATotal: ₹${total}%0A%0APlease confirm my order. Thank you!`;
+  message += `\nTotal: ₹${total}\n\nPlease confirm my order. Thank you!`;
   window.open(`https://wa.me/919818231025?text=${encodeURIComponent(message)}`, '_blank');
 }
 
