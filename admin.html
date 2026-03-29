@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToyLand Admin Panel</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧸</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        .admin-login { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+        .login-form { background: white; padding: 3rem; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); max-width: 400px; width: 100%; }
+        .login-title { text-align: center; margin-bottom: 2rem; color: var(--text); font-size: 2rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 1rem; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; font-family: 'Nunito', sans-serif; transition: all 0.3s ease; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255,107,53,0.1); }
+        .login-btn { width: 100%; padding: 1rem; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; font-family: 'Nunito', sans-serif; }
+        .login-btn:hover { background: #e55a2b; transform: translateY(-2px); }
+
+        .admin-dashboard { display: none; min-height: 100vh; padding: 2rem; }
+        .admin-dashboard.active { display: block; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .admin-title { font-size: 2rem; font-weight: 800; color: var(--text); }
+        .logout-btn { background: var(--danger); color: white; padding: 0.8rem 1.5rem; border-radius: 12px; border: none; cursor: pointer; font-weight: 700; font-family: 'Nunito', sans-serif; }
+        .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid var(--border); }
+        .tab-btn { padding: 1rem 2rem; background: none; border: none; font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s ease; font-family: 'Nunito', sans-serif; font-size: 1rem; }
+        .tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .products-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .products-table th, .products-table td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+        .products-table th { background: var(--light-grey); font-weight: 700; color: var(--text); }
+        .stock-toggle { cursor: pointer; padding: 0.5rem 1rem; border-radius: 8px; border: none; font-weight: 600; transition: all 0.3s ease; min-width: 100px; font-family: 'Nunito', sans-serif; }
+        .stock-toggle.in-stock { background: var(--success); color: white; }
+        .stock-toggle.out-stock { background: var(--danger); color: white; }
+        .delete-btn { background: var(--danger); color: white; padding: 0.5rem 1rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Nunito', sans-serif; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .stat-card { background: white; padding: 2rem; border-radius: 16px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .stat-number { font-size: 2.5rem; font-weight: 800; color: var(--primary); }
+        .stat-label { font-size: 1rem; color: #7f8c8d; margin-top: 0.5rem; }
+
+        .add-product-form { background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); max-width: 700px; margin: 0 auto; }
+        .add-product-form h3 { margin-bottom: 1.5rem; font-size: 1.5rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .form-row.full { grid-template-columns: 1fr; }
+        .cloudinary-upload { border: 3px dashed var(--border); padding: 2rem; text-align: center; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; margin-bottom: 1rem; }
+        .cloudinary-upload:hover { border-color: var(--primary); background: var(--light-grey); }
+        .upload-preview { max-width: 200px; max-height: 200px; border-radius: 8px; margin-top: 1rem; }
+        .submit-btn { width: 100%; padding: 1.2rem; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; font-family: 'Nunito', sans-serif; }
+        .submit-btn:hover:not(:disabled) { background: #e55a2b; transform: translateY(-2px); }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .notice { background: #fff3cd; border: 1px solid #ffc107; padding: 1rem 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; font-weight: 600; color: #856404; }
+
+        @media (max-width: 768px) {
+            .form-row { grid-template-columns: 1fr; }
+            .admin-header { flex-direction: column; gap: 1rem; }
+            .tabs { overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN -->
+    <div class="admin-login" id="loginSection">
+        <form class="login-form" id="loginForm">
+            <h2 class="login-title">🧸 ToyLand Admin</h2>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+            <div style="text-align:center;margin-top:1rem;color:#7f8c8d;">ToyLand Admin</div>
+        </form>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="admin-dashboard" id="dashboard">
+        <header class="admin-header">
+            <h1 class="admin-title">🧸 Admin Dashboard</h1>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('products', this)">Products</button>
+            <button class="tab-btn" onclick="switchTab('add-product', this)">Add Product</button>
+            <button class="tab-btn" onclick="switchTab('stats', this)">Stats</button>
+        </div>
+
+        <!-- PRODUCTS TAB -->
+        <div id="products-tab" class="tab-content active">
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Brand</th><th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTableBody"></tbody>
+            </table>
+        </div>
+
+        <!-- ADD PRODUCT TAB -->
+        <div id="add-product-tab" class="tab-content">
+            <form class="add-product-form" id="addProductForm">
+                <h3>Add New Product</h3>
+                <div id="appsScriptNotice" class="notice" style="display:none">
+                    ⚠️ Apps Script URL not configured. Set <code>APPS_SCRIPT_URL</code> to enable adding products.
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Product Name *</label>
+                        <input type="text" id="productName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price (₹) *</label>
+                        <input type="number" id="productPrice" min="0" step="1" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Original Price (₹)</label>
+                        <input type="number" id="productOriginalPrice" min="0" step="1" placeholder="Leave blank = auto">
+                    </div>
+                    <div class="form-group">
+                        <label>Brand</label>
+                        <input type="text" id="productBrand" placeholder="e.g. Hasbro">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select id="productCategory" required onchange="handleCategoryChange()">
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="customCategoryGroup" style="display:none">
+                        <label>New Category Name *</label>
+                        <input type="text" id="customCategory" placeholder="e.g. Water Toys">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Age Range</label>
+                        <input type="text" id="productAge" placeholder="e.g. 4-12">
+                    </div>
+                    <div class="form-group">
+                        <label>Stock Status</label>
+                        <select id="productStock">
+                            <option value="true">In Stock</option>
+                            <option value="false">Out of Stock</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Rating (0-5)</label>
+                        <input type="number" id="productRating" min="0" max="5" step="0.1" placeholder="e.g. 4.5">
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Product Image</label>
+                        <div class="cloudinary-upload" id="imageUpload">
+                            <div style="font-size:2rem">📸</div>
+                            <div style="font-weight:700;margin:0.5rem 0">Click or drag to upload image</div>
+                            <div style="color:#7f8c8d;font-size:0.9rem">JPG, PNG, WEBP supported</div>
+                            <input type="file" id="imageFile" accept="image/*" style="display:none">
+                        </div>
+                        <div id="uploadStatus" style="display:none;margin-top:0.5rem;font-weight:600;color:var(--primary)"></div>
+                        <input type="url" id="imageUrl" placeholder="Or paste image URL directly" style="margin-top:0.8rem;width:100%;padding:1rem;border:2px solid var(--border);border-radius:12px;font-size:1rem;font-family:'Nunito',sans-serif">
+                        <img id="uploadPreview" class="upload-preview" style="display:none;margin-top:0.8rem">
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="productDesc" rows="3" placeholder="Product description..."></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="submit-btn" id="submitBtn">Add Product to Sheet</button>
+            </form>
+        </div>
+
+        <!-- STATS TAB -->
+        <div id="stats-tab" class="tab-content">
+            <div class="stats-grid" id="statsGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        // No secrets here — all sensitive values are in Netlify environment variables
+        let products = [];
+
+        // ── Auth via Netlify function ─────────────────────────
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            try {
+                const res = await fetch('/.netlify/functions/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('dashboard').classList.add('active');
+                    loadProductsTable();
+                } else {
+                    alert('Invalid credentials');
+                }
+            } catch (err) {
+                alert('Login failed: ' + err.message);
+            }
+        });
+
+        function logout() {
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('loginSection').style.display = 'flex';
+            document.getElementById('loginForm').reset();
+        }
+
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(`${tab}-tab`).classList.add('active');
+            if (tab === 'products') loadProductsTable();
+            if (tab === 'stats') loadStats();
+            if (tab === 'add-product') populateCategoryDropdown();
+        }
+
+        // ── Load products via Netlify function (hides SHEET_ID) ─
+        async function loadProductsTable() {
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem">Loading...</td></tr>';
+            try {
+                const res = await fetch('/.netlify/functions/sheet');
+                const text = await res.text();
+                const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+                products = json.table.rows
+                    .filter(row => row.c[1]?.v)
+                    .map((row, i) => ({
+                        id: row.c[0]?.v ?? i + 1,
+                        name: row.c[1]?.v ?? 'N/A',
+                        category: row.c[2]?.v ?? 'Uncategorized',
+                        price: parseFloat(row.c[3]?.v) || 0,
+                        stock: row.c[9]?.v === true || String(row.c[9]?.v ?? row.c[9]?.f ?? '').toUpperCase() === 'TRUE',
+                        brand: row.c[8]?.v ?? 'N/A'
+                    }));
+                tbody.innerHTML = products.map(p => `
+                    <tr>
+                        <td>${p.id}</td>
+                        <td>${p.name}</td>
+                        <td>${p.category}</td>
+                        <td>₹${p.price}</td>
+                        <td><button class="stock-toggle ${p.stock ? 'in-stock' : 'out-stock'}" onclick="toggleStock(${p.id}, ${!p.stock})">${p.stock ? '✅ In Stock' : '❌ Out of Stock'}</button></td>
+                        <td>${p.brand}</td>
+                        <td><button class="delete-btn" onclick="deleteProduct(${p.id})">🗑 Delete</button></td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="7" style="color:red;padding:1rem">Failed to load. Check console.</td></tr>';
+                console.error(err);
+            }
+        }
+
+        function populateCategoryDropdown() {
+            const sel = document.getElementById('productCategory');
+            const categories = [...new Set(products.map(p => p.category))].sort();
+            sel.innerHTML = '<option value="">Select Category</option>' +
+                categories.map(c => `<option value="${c}">${c}</option>`).join('') +
+                '<option value="__new__">➕ Add New Category...</option>';
+            document.getElementById('appsScriptNotice').style.display = 'none';
+        }
+
+        function handleCategoryChange() {
+            const sel = document.getElementById('productCategory');
+            const group = document.getElementById('customCategoryGroup');
+            const input = document.getElementById('customCategory');
+            if (sel.value === '__new__') {
+                group.style.display = 'block';
+                input.required = true;
+            } else {
+                group.style.display = 'none';
+                input.required = false;
+                input.value = '';
+            }
+        }
+
+        // ── Admin actions via Netlify function (hides APPS_SCRIPT_URL + secret) ─
+        async function adminAction(data) {
+            const res = await fetch('/.netlify/functions/admin-action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            return res.json();
+        }
+
+        async function toggleStock(id, newStock) {
+            try {
+                await adminAction({ action: 'toggle_stock', id, stock: newStock });
+                setTimeout(loadProductsTable, 1500);
+            } catch (err) {
+                alert('Failed to update stock: ' + err.message);
+            }
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm('Delete this product from the sheet?')) return;
+            try {
+                await adminAction({ action: 'delete', id });
+                setTimeout(loadProductsTable, 1500);
+            } catch (err) {
+                alert('Failed to delete: ' + err.message);
+            }
+        }
+
+        document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const catSel = document.getElementById('productCategory').value;
+            const category = catSel === '__new__' ? document.getElementById('customCategory').value.trim() : catSel;
+            if (!category) { alert('Please select or enter a category.'); return; }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Adding...';
+
+            try {
+                await adminAction({
+                    action: 'add_product',
+                    name: document.getElementById('productName').value.trim(),
+                    price: parseFloat(document.getElementById('productPrice').value),
+                    original_price: parseFloat(document.getElementById('productOriginalPrice').value) || null,
+                    category,
+                    brand: document.getElementById('productBrand').value.trim(),
+                    age_range: document.getElementById('productAge').value.trim(),
+                    stock: document.getElementById('productStock').value === 'true',
+                    rating: parseFloat(document.getElementById('productRating').value) || 0,
+                    image_url: document.getElementById('imageUrl').value.trim(),
+                    description: document.getElementById('productDesc').value.trim()
+                });
+                alert('✅ Product added! Refreshing...');
+                document.getElementById('addProductForm').reset();
+                document.getElementById('uploadPreview').style.display = 'none';
+                document.getElementById('customCategoryGroup').style.display = 'none';
+                setTimeout(() => { loadProductsTable(); switchTab('products', document.querySelector('.tab-btn')); }, 1500);
+            } catch (err) {
+                alert('Error: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Add Product to Sheet';
+            }
+        });
+
+        // ── Image upload via Netlify function (hides Cloudinary creds) ─
+        const imageUpload = document.getElementById('imageUpload');
+        const imageFile = document.getElementById('imageFile');
+        const imageUrl = document.getElementById('imageUrl');
+        const uploadPreview = document.getElementById('uploadPreview');
+        const uploadStatus = document.getElementById('uploadStatus');
+
+        imageUpload.addEventListener('click', () => imageFile.click());
+        imageUpload.addEventListener('dragover', (e) => { e.preventDefault(); imageUpload.style.borderColor = 'var(--primary)'; });
+        imageUpload.addEventListener('dragleave', () => { imageUpload.style.borderColor = ''; });
+        imageUpload.addEventListener('drop', (e) => {
+            e.preventDefault(); imageUpload.style.borderColor = '';
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) uploadToCloudinary(file);
+        });
+        imageFile.addEventListener('change', (e) => { if (e.target.files[0]) uploadToCloudinary(e.target.files[0]); });
+        imageUrl.addEventListener('input', (e) => {
+            uploadPreview.src = e.target.value;
+            uploadPreview.style.display = e.target.value ? 'block' : 'none';
+        });
+
+        async function uploadToCloudinary(file) {
+            uploadStatus.style.display = 'block';
+            uploadStatus.style.color = 'var(--primary)';
+            uploadStatus.textContent = '⏳ Uploading...';
+            imageUpload.style.opacity = '0.6';
+            imageUpload.style.pointerEvents = 'none';
+            try {
+                const base64 = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = e => resolve(e.target.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+                const res = await fetch('/.netlify/functions/cloudinary', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ fileBase64: base64, fileName: file.name })
+                });
+                const data = await res.json();
+                if (data.url) {
+                    imageUrl.value = data.url;
+                    uploadPreview.src = data.url;
+                    uploadPreview.style.display = 'block';
+                    uploadStatus.style.color = 'var(--success)';
+                    uploadStatus.textContent = '✅ Uploaded!';
+                } else throw new Error(data.error || 'Upload failed');
+            } catch (err) {
+                uploadStatus.style.color = 'var(--danger)';
+                uploadStatus.textContent = '❌ ' + err.message;
+            } finally {
+                imageUpload.style.opacity = '';
+                imageUpload.style.pointerEvents = '';
+            }
+        }
+
+        // ── Stats ─────────────────────────────────────────────
+        function loadStats() {
+            const inStock = products.filter(p => p.stock).length;
+            const categories = [...new Set(products.map(p => p.category))].length;
+            const totalValue = products.reduce((s, p) => s + p.price, 0);
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div class="stat-number">${products.length}</div><div class="stat-label">Total Products</div></div>
+                <div class="stat-card"><div class="stat-number">${inStock}</div><div class="stat-label">In Stock</div></div>
+                <div class="stat-card"><div class="stat-number">${products.length - inStock}</div><div class="stat-label">Out of Stock</div></div>
+                <div class="stat-card"><div class="stat-number">${categories}</div><div class="stat-label">Categories</div></div>
+                <div class="stat-card"><div class="stat-number">₹${totalValue.toLocaleString()}</div><div class="stat-label">Total Catalogue Value</div></div>
+            `;
+        }
+    </script>
+
+        // ── Auth ──────────────────────────────────────────────
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            try {
+                const res = await fetch('/.netlify/functions/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: u, password: p })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('dashboard').classList.add('active');
+                    loadProductsTable();
+                } else {
+                    alert('Invalid credentials');
+                }
+            } catch {
+                // Fallback for local dev where Netlify function isn't available
+                if (u === ADMIN_USERNAME && p === ADMIN_PASSWORD) {
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('dashboard').classList.add('active');
+                    loadProductsTable();
+                } else {
+                    alert('Invalid credentials');
+                }
+            }
+        });
+
+        function logout() {
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('loginSection').style.display = 'flex';
+            document.getElementById('loginForm').reset();
+        }
+
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(`${tab}-tab`).classList.add('active');
+            if (tab === 'products') loadProductsTable();
+            if (tab === 'stats') loadStats();
+            if (tab === 'add-product') populateCategoryDropdown();
+        }
+
+        // ── Load products from sheet ──────────────────────────
+        async function loadProductsTable() {
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem">Loading...</td></tr>';
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
+                const res = await fetch(url);
+                const text = await res.text();
+                const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+                products = json.table.rows
+                    .filter(row => row.c[1]?.v)
+                    .map((row, i) => ({
+                        id: row.c[0]?.v ?? i + 1,
+                        name: row.c[1]?.v ?? 'N/A',
+                        category: row.c[2]?.v ?? 'Uncategorized',
+                        price: parseFloat(row.c[3]?.v) || 0,
+                        stock: row.c[9]?.v === true || String(row.c[9]?.v ?? row.c[9]?.f ?? '').toUpperCase() === 'TRUE',
+                        brand: row.c[8]?.v ?? 'N/A'
+                    }));
+
+                tbody.innerHTML = products.map(p => `
+                    <tr>
+                        <td>${p.id}</td>
+                        <td>${p.name}</td>
+                        <td>${p.category}</td>
+                        <td>₹${p.price}</td>
+                        <td><button class="stock-toggle ${p.stock ? 'in-stock' : 'out-stock'}" onclick="toggleStock(${p.id}, ${!p.stock})">${p.stock ? '✅ In Stock' : '❌ Out of Stock'}</button></td>
+                        <td>${p.brand}</td>
+                        <td><button class="delete-btn" onclick="deleteProduct(${p.id})">🗑 Delete</button></td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="7" style="color:red;padding:1rem">Failed to load products. Check console.</td></tr>';
+                console.error(err);
+            }
+        }
+
+        // ── Populate category dropdown from live sheet data ───
+        function populateCategoryDropdown() {
+            const sel = document.getElementById('productCategory');
+            const categories = [...new Set(products.map(p => p.category))].sort();
+            sel.innerHTML = '<option value="">Select Category</option>' +
+                categories.map(c => `<option value="${c}">${c}</option>`).join('') +
+                '<option value="__new__">➕ Add New Category...</option>';
+
+            // Show Apps Script notice if not configured
+            const notice = document.getElementById('appsScriptNotice');
+            notice.style.display = APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE' ? 'block' : 'none';
+        }
+
+        function handleCategoryChange() {
+            const sel = document.getElementById('productCategory');
+            const group = document.getElementById('customCategoryGroup');
+            const input = document.getElementById('customCategory');
+            if (sel.value === '__new__') {
+                group.style.display = 'block';
+                input.required = true;
+            } else {
+                group.style.display = 'none';
+                input.required = false;
+                input.value = '';
+            }
+        }
+
+        // ── Shared Apps Script POST (no preflight CORS issue) ─
+        async function appsScriptPost(data) {
+            await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: new URLSearchParams({ data: JSON.stringify({ ...data, secret: APPS_SCRIPT_SECRET }) })
+            });
+        }
+
+        // ── Toggle stock ──────────────────────────────────────
+        async function toggleStock(id, newStock) {
+            try {
+                await appsScriptPost({ action: 'toggle_stock', id, stock: newStock });
+                setTimeout(loadProductsTable, 1500);
+            } catch (err) {
+                alert('Failed to update stock: ' + err.message);
+            }
+        }
+
+        // ── Delete product ────────────────────────────────────
+        async function deleteProduct(id) {
+            if (!confirm('Delete this product from the sheet?')) return;
+            try {
+                await appsScriptPost({ action: 'delete', id });
+                setTimeout(loadProductsTable, 1500);
+            } catch (err) {
+                alert('Failed to delete: ' + err.message);
+            }
+        }
+
+        // ── Add product ───────────────────────────────────────
+        document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const catSel = document.getElementById('productCategory').value;
+            const category = catSel === '__new__'
+                ? document.getElementById('customCategory').value.trim()
+                : catSel;
+            if (!category) { alert('Please select or enter a category.'); return; }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Adding...';
+
+            const formData = {
+                action: 'add_product',
+                name: document.getElementById('productName').value.trim(),
+                price: parseFloat(document.getElementById('productPrice').value),
+                original_price: parseFloat(document.getElementById('productOriginalPrice').value) || null,
+                category,
+                brand: document.getElementById('productBrand').value.trim(),
+                age_range: document.getElementById('productAge').value.trim(),
+                stock: document.getElementById('productStock').value === 'true',
+                rating: parseFloat(document.getElementById('productRating').value) || 0,
+                image_url: document.getElementById('imageUrl').value.trim(),
+                description: document.getElementById('productDesc').value.trim()
+            };
+
+            try {
+                await appsScriptPost(formData);
+                alert(`✅ "${formData.name}" added! Refreshing...`);
+                document.getElementById('addProductForm').reset();
+                document.getElementById('uploadPreview').style.display = 'none';
+                document.getElementById('customCategoryGroup').style.display = 'none';
+                setTimeout(() => {
+                    loadProductsTable();
+                    switchTab('products', document.querySelector('.tab-btn'));
+                }, 1500);
+            } catch (err) {
+                alert('Error: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Add Product to Sheet';
+            }
+        });
+
+        // ── Image upload (Cloudinary) ──────────────────────
+        const CLOUDINARY_CLOUD_NAME = 'dkgskoneh';
+        const CLOUDINARY_UPLOAD_PRESET = 'toyland_uploads';
+
+        const imageUpload = document.getElementById('imageUpload');
+        const imageFile = document.getElementById('imageFile');
+        const imageUrl = document.getElementById('imageUrl');
+        const uploadPreview = document.getElementById('uploadPreview');
+        const uploadStatus = document.getElementById('uploadStatus');
+
+        imageUpload.addEventListener('click', () => imageFile.click());
+
+        imageUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            imageUpload.style.borderColor = 'var(--primary)';
+            imageUpload.style.background = 'rgba(255,107,53,0.05)';
+        });
+        imageUpload.addEventListener('dragleave', () => {
+            imageUpload.style.borderColor = '';
+            imageUpload.style.background = '';
+        });
+        imageUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            imageUpload.style.borderColor = '';
+            imageUpload.style.background = '';
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) uploadToCloudinary(file);
+        });
+
+        imageFile.addEventListener('change', (e) => {
+            if (e.target.files[0]) uploadToCloudinary(e.target.files[0]);
+        });
+
+        imageUrl.addEventListener('input', (e) => {
+            if (e.target.value) {
+                uploadPreview.src = e.target.value;
+                uploadPreview.style.display = 'block';
+            } else {
+                uploadPreview.style.display = 'none';
+            }
+        });
+
+        async function uploadToCloudinary(file) {
+            uploadStatus.style.display = 'block';
+            uploadStatus.style.color = 'var(--primary)';
+            uploadStatus.textContent = '⏳ Uploading...';
+            imageUpload.style.opacity = '0.6';
+            imageUpload.style.pointerEvents = 'none';
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+            try {
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.secure_url) {
+                    imageUrl.value = data.secure_url;
+                    uploadPreview.src = data.secure_url;
+                    uploadPreview.style.display = 'block';
+                    uploadStatus.style.color = 'var(--success)';
+                    uploadStatus.textContent = '✅ Uploaded successfully!';
+                } else {
+                    throw new Error(data.error?.message || 'Upload failed');
+                }
+            } catch (err) {
+                uploadStatus.style.color = 'var(--danger)';
+                uploadStatus.textContent = '❌ Upload failed: ' + err.message;
+            } finally {
+                imageUpload.style.opacity = '';
+                imageUpload.style.pointerEvents = '';
+            }
+        }
+
+        // ── Stats ─────────────────────────────────────────────
+        function loadStats() {
+            const inStock = products.filter(p => p.stock).length;
+            const categories = [...new Set(products.map(p => p.category))].length;
+            const totalValue = products.reduce((s, p) => s + p.price, 0);
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><div class="stat-number">${products.length}</div><div class="stat-label">Total Products</div></div>
+                <div class="stat-card"><div class="stat-number">${inStock}</div><div class="stat-label">In Stock</div></div>
+                <div class="stat-card"><div class="stat-number">${products.length - inStock}</div><div class="stat-label">Out of Stock</div></div>
+                <div class="stat-card"><div class="stat-number">${categories}</div><div class="stat-label">Categories</div></div>
+                <div class="stat-card"><div class="stat-number">₹${totalValue.toLocaleString()}</div><div class="stat-label">Total Catalogue Value</div></div>
+            `;
+        }
+    </script>
+</body>
+</html>

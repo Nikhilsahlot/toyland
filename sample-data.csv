@@ -1,0 +1,25 @@
+id,name,category,price,original_price,image_url,description,age_range,brand,in_stock
+1,"Spider-Man Action Figure","Action Figures",799,1199,"https://placehold.co/300x300/FF6B35/white?text=Spider-Man",Superhero action figure with web-slinging action,"4-12","Hasbro",TRUE
+2,"Hot Wheels 20 Car Pack","Action Figures",899,1299,"https://placehold.co/300x300/FF6B35/white?text=Hot%20Wheels",20 die-cast cars perfect for racing and collecting,"3-10","Mattel",TRUE
+3,"Avengers 6-Figure Set","Action Figures",1499,2199,"https://placehold.co/300x300/FF6B35/white?text=Avengers",Assemble your favorite superheroes,"5-14","Marvel",TRUE
+4,"Dinosaur Figure Set (12pcs)","Action Figures",649,899,"https://placehold.co/300x300/FF6B35/white?text=Dinos",Realistic dinosaur figures for prehistoric play,"3-10","Safari Ltd",TRUE
+5,"LEGO Classic Creative Set","Building Blocks",2499,3299,"https://placehold.co/300x300/6C3CE1/white?text=LEGO",Build anything with 790 pieces,"4-12","LEGO",TRUE
+6,"Magnetic Tiles 60pcs","Building Blocks",1799,2499,"https://placehold.co/300x300/6C3CE1/white?text=Magnets",Colorful magnetic building tiles,"3-10","Magformers",TRUE
+7,"Wooden Block Tower Game","Building Blocks",449,599,"https://placehold.co/300x300/6C3CE1/white?text=Blocks",Classic Jenga-style stacking game,"3-8","Funskool",TRUE
+8,"UNO Card Game","Board Games",299,399,"https://placehold.co/300x300/27AE60/white?text=UNO",Classic card matching game for all ages,"7+","Mattel",TRUE
+9,"Chess & Ludo Combo","Board Games",449,649,"https://placehold.co/300x300/27AE60/white?text=Chess",Dual board game set,"6+","Toy Kraft",TRUE
+10,"Scrabble Junior","Board Games",799,1099,"https://placehold.co/300x300/27AE60/white?text=Scrabble",Word-building game for kids,"5-10","Hasbro",TRUE
+11,"RC Monster Truck","Remote Control",1799,2499,"https://placehold.co/300x300/E74C3C/white?text=RC%20Truck",High-speed off-road monster truck,"6-14","Maisto",TRUE
+12,"RC Helicopter 4CH","Remote Control",1299,1899,"https://placehold.co/300x300/E74C3C/white?text=Helicopter",4-channel indoor helicopter,"8+","Syma",FALSE
+13,"RC Racing Car 1:18","Remote Control",999,1499,"https://placehold.co/300x300/E74C3C/white?text=RC%20Car",Scale racing car with speed controller,"6-14","HSP",TRUE
+14,"Wooden Alphabet Puzzle","Educational",649,899,"https://placehold.co/300x300/F39C12/white?text=Alphabet",Learn ABCs with chunky puzzle pieces,"2-5","Melissa & Doug",TRUE
+15,"Kids Microscope Set","Educational",1099,1599,"https://placehold.co/300x300/F39C12/white?text=Microscope",100x-1200x microscope with slides,"8-14","GeoSafari",TRUE
+16,"Math Learning Abacus","Educational",349,499,"https://placehold.co/300x300/F39C12/white?text=Abacus",Traditional counting tool,"3-7","Kumon",TRUE
+17,"Giant Teddy Bear 3ft","Soft Toys",1299,1799,"https://placehold.co/300x300/E91E8C/white?text=Teddy",Huggable 3-foot plush bear,"All ages","Huggable",TRUE
+18,"Barbie Dreamhouse Set","Soft Toys",4999,6499,"https://placehold.co/300x300/E91E8C/white?text=Barbie",Mini dreamhouse with furniture,"3-12","Mattel",FALSE
+19,"Nerf Elite Blaster","Outdoor & Sports",1299,1799,"https://placehold.co/300x300/2ECC71/white?text=Nerf",Foam dart blaster with 20 darts,"8+","Nerf",TRUE
+20,"Kids Badminton Set","Outdoor & Sports",499,699,"https://placehold.co/300x300/2ECC71/white?text=Badminton",Complete badminton set for kids,"5-14","Cosco",TRUE
+21,"Bubble Gun Electric","Outdoor & Sports",349,499,"https://placehold.co/300x300/2ECC71/white?text=Bubbles",Lights & music bubble machine,"3-10","Fun Zone",TRUE
+22,"Play-Doh Mega Set 36 Colors","Arts & Crafts",799,999,"https://placehold.co/300x300/9B59B6/white?text=Play-Doh",36 vibrant colors for creativity,"3-10","Hasbro",TRUE
+23,"Crayola 120 Crayon Set","Arts & Crafts",599,849,"https://placehold.co/300x300/9B59B6/white?text=Crayola",Rainbow crayons for artists,"3+","Crayola",TRUE
+24,"Kids Painting Easel Set","Arts & Crafts",1499,1999,"https://placehold.co/300x300/9B59B6/white?text=Easel",Double-sided easel with supplies,"3-10","Melissa & Doug",TRUE
