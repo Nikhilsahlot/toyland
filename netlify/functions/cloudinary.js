@@ -10,15 +10,18 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { fileBase64, fileName } = JSON.parse(event.body || '{}');
-    const formData = new URLSearchParams();
-    formData.append('file', fileBase64);
-    formData.append('upload_preset', UPLOAD_PRESET);
+    const { fileBase64 } = JSON.parse(event.body || '{}');
 
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+    const params = new URLSearchParams();
+    params.append('file', fileBase64);
+    params.append('upload_preset', UPLOAD_PRESET.trim());
+
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME.trim()}/image/upload`, {
       method: 'POST',
-      body: formData
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
     });
+
     const data = await res.json();
     if (data.secure_url) {
       return { statusCode: 200, headers: corsHeaders(), body: JSON.stringify({ url: data.secure_url }) };
