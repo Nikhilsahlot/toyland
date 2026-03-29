@@ -14,7 +14,6 @@ exports.handler = async (event) => {
     const formData = new URLSearchParams();
     formData.append('file', fileBase64);
     formData.append('upload_preset', UPLOAD_PRESET);
-    formData.append('public_id', fileName || 'product');
 
     const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
       method: 'POST',
