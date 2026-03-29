@@ -390,16 +390,13 @@
             imageUpload.style.opacity = '0.6';
             imageUpload.style.pointerEvents = 'none';
             try {
-                const base64 = await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = e => resolve(e.target.result);
-                    reader.onerror = reject;
-                    reader.readAsDataURL(file);
-                });
                 const res = await fetch('/.netlify/functions/cloudinary', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ fileBase64: base64, fileName: file.name })
+                    headers: {
+                        'Content-Type': file.type,
+                        'x-file-type': file.type
+                    },
+                    body: file
                 });
                 const data = await res.json();
                 if (data.url) {
