@@ -375,42 +375,41 @@
         imageUpload.addEventListener('drop', (e) => {
             e.preventDefault(); imageUpload.style.borderColor = '';
             const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) uploadToCloudinary(file);
+            if (file && file.type.startsWith('image/')) uploadImage(file);
         });
-        imageFile.addEventListener('change', (e) => { if (e.target.files[0]) uploadToCloudinary(e.target.files[0]); });
+        imageFile.addEventListener('change', (e) => { if (e.target.files[0]) uploadImage(e.target.files[0]); });
         imageUrl.addEventListener('input', (e) => {
             uploadPreview.src = e.target.value;
             uploadPreview.style.display = e.target.value ? 'block' : 'none';
         });
 
-        async function uploadToCloudinary(file) {
+        async function uploadImage(file) {
             uploadStatus.style.display = 'block';
             uploadStatus.style.color = 'var(--primary)';
             uploadStatus.textContent = '⏳ Uploading...';
             imageUpload.style.opacity = '0.6';
             imageUpload.style.pointerEvents = 'none';
             try {
-                // Sanitize filename client-side (match server)
-                const rawName = file.name.replace(/\.[^/.]+$/, '');
-                const safeName = rawName.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 80);
+                // Fetch cloud config from Netlify (keeps creds server-side)
+                const configRes = await fetch('/.netlify/functions/cloudinary');
+                const { cloudName, uploadPreset } = await configRes.json();
+
                 const formData = new FormData();
-                formData.append('file', file, `${safeName}.${file.name.split('.').pop()}`);
-                
-                const res = await fetch('/.netlify/functions/cloudinary', {
+                formData.append('file', file);
+                formData.append('upload_preset', uploadPreset);
+
+                const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
                     method: 'POST',
-                    headers: {
-                        'x-file-name': `${safeName}.${file.name.split('.').pop()}`
-                    },
                     body: formData
                 });
                 const data = await res.json();
-                if (data.url) {
-                    imageUrl.value = data.url;
-                    uploadPreview.src = data.url;
+                if (data.secure_url) {
+                    imageUrl.value = data.secure_url;
+                    uploadPreview.src = data.secure_url;
                     uploadPreview.style.display = 'block';
                     uploadStatus.style.color = 'var(--success)';
                     uploadStatus.textContent = '✅ Uploaded!';
-                } else throw new Error(data.error || 'Upload failed');
+                } else throw new Error(data.error?.message || 'Upload failed');
             } catch (err) {
                 uploadStatus.style.color = 'var(--danger)';
                 uploadStatus.textContent = '❌ ' + err.message;
