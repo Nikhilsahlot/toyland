@@ -7,8 +7,12 @@ exports.handler = async (event) => {
   }
 
   const { username, password } = JSON.parse(event.body || '{}');
-  const validUser = process.env.ADMIN_USERNAME || 'admin';
-  const validPass = process.env.ADMIN_PASSWORD || 'admin123';
+  const validUser = process.env.ADMIN_USERNAME;
+  const validPass = process.env.ADMIN_PASSWORD;
+
+  if (!validUser || !validPass) {
+    return { statusCode: 500, headers: corsHeaders(), body: JSON.stringify({ error: 'Auth not configured' }) };
+  }
 
   if (username === validUser && password === validPass) {
     return { statusCode: 200, headers: corsHeaders(), body: JSON.stringify({ success: true }) };

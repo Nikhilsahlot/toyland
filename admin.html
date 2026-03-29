@@ -394,7 +394,8 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': file.type,
-                        'x-file-type': file.type
+                        'x-file-type': file.type,
+                        'x-file-name': file.name
                     },
                     body: file
                 });

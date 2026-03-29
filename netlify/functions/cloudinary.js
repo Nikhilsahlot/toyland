@@ -19,9 +19,15 @@ exports.handler = async (event) => {
     const mimeType = event.headers['x-file-type'] || 'image/jpeg';
     const ext = mimeType.split('/')[1] || 'jpg';
 
+    // Sanitize filename — strip slashes and special chars, set explicit public_id
+    const rawName = (event.headers['x-file-name'] || 'product').replace(/\.[^/.]+$/, '');
+    const safeName = rawName.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 80);
+    const publicId = `toyland_${safeName}_${Date.now()}`;
+
     const form = new FormData();
-    form.append('file', fileBuffer, { filename: `upload.${ext}`, contentType: mimeType });
+    form.append('file', fileBuffer, { filename: `${safeName}.${ext}`, contentType: mimeType });
     form.append('upload_preset', UPLOAD_PRESET);
+    form.append('public_id', publicId);
 
     const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
       method: 'POST',
@@ -42,7 +48,7 @@ exports.handler = async (event) => {
 function corsHeaders() {
   return {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type, x-file-type',
+    'Access-Control-Allow-Headers': 'Content-Type, x-file-type, x-file-name',
     'Access-Control-Allow-Methods': 'POST, OPTIONS'
   };
 }
