@@ -18,22 +18,6 @@ A toy shop built with HTML, CSS and JavaScript. Products are managed via Google 
 - Image hosting: Cloudinary
 - Deployment: Netlify
 
-## Setup
-1. Clone the repo
-2. Set environment variables in Netlify (see below)
-3. Deploy to Netlify — done
-
-## Environment Variables
-Set these in Netlify → Site settings → Environment variables:
-```
-SHEET_ID
-APPS_SCRIPT_URL
-APPS_SCRIPT_SECRET
-CLOUDINARY_CLOUD_NAME
-CLOUDINARY_UPLOAD_PRESET
-ADMIN_USERNAME
-ADMIN_PASSWORD
-```
 
 ## File Structure
 ```
