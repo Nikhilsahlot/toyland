@@ -390,14 +390,18 @@
             imageUpload.style.opacity = '0.6';
             imageUpload.style.pointerEvents = 'none';
             try {
+                // Sanitize filename client-side (match server)
+                const rawName = file.name.replace(/\.[^/.]+$/, '');
+                const safeName = rawName.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 80);
+                const formData = new FormData();
+                formData.append('file', file, `${safeName}.${file.name.split('.').pop()}`);
+                
                 const res = await fetch('/.netlify/functions/cloudinary', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': file.type,
-                        'x-file-type': file.type,
-                        'x-file-name': file.name
+                        'x-file-name': `${safeName}.${file.name.split('.').pop()}`
                     },
-                    body: file
+                    body: formData
                 });
                 const data = await res.json();
                 if (data.url) {
