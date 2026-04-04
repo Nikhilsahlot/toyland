@@ -23,14 +23,30 @@
 const STORE_SLUG = "onkartoys";
 
 export default async (req) => {
-  // Security
   const { searchParams } = new URL(req.url);
   const secret = searchParams.get("secret");
-  if (secret !== Netlify.env.get("SCRAPE_SECRET")) {
-    return json({ error: "Unauthorized. Add ?secret=YOUR_SCRAPE_SECRET to the URL." }, 401);
+
+  // Debug mode — shows env var status without exposing values
+  if (searchParams.get("debug") === "1") {
+    return json({
+      SCRAPE_SECRET_set: !!process.env.SCRAPE_SECRET,
+      SCRAPE_SECRET_length: (process.env.SCRAPE_SECRET || "").length,
+      APPS_SCRIPT_URL_set: !!process.env.APPS_SCRIPT_URL,
+      secret_you_sent: secret,
+      match: secret === process.env.SCRAPE_SECRET,
+    });
   }
 
-  const appsScriptUrl = Netlify.env.get("APPS_SCRIPT_URL");
+  // Security check
+  const expectedSecret = process.env.SCRAPE_SECRET;
+  if (!expectedSecret) {
+    return json({ error: "SCRAPE_SECRET env var not set in Netlify. Add it in Site configuration → Environment variables, then redeploy." }, 500);
+  }
+  if (secret !== expectedSecret) {
+    return json({ error: `Wrong secret. You sent: "${secret}". Check your SCRAPE_SECRET env var value.` }, 401);
+  }
+
+  const appsScriptUrl = process.env.APPS_SCRIPT_URL;
   if (!appsScriptUrl) {
     return json({ error: "APPS_SCRIPT_URL environment variable not set in Netlify." }, 500);
   }
